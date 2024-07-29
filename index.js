@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import { Server } from 'socket.io';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT =  3000;
 
 const server = http.createServer(app);
 const io = new Server(server);

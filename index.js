@@ -18,16 +18,23 @@ server.listen(PORT, () => {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(express.static(__dirname + '/public'))
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Add your socket.io code here
+// Socket.io code
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log('A user connected');
+
   socket.on('message', (msg) => {
-    socket.broadcast.emit('message', msg)
-})
+    // Broadcast the message to all clients except the sender
+    socket.broadcast.emit('message', msg);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
 });

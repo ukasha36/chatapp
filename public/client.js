@@ -1,9 +1,8 @@
-const socket = io();
+const socket = io(window.location.origin);
 
 let name;
 let textarea = document.querySelector('#textarea');
 let messageArea = document.querySelector('.message__area');
-let userId = generateUserId();
 
 do {
   name = prompt('Please enter your name: ');
@@ -15,22 +14,17 @@ textarea.addEventListener('keyup', (e) => {
   }
 });
 
-function generateUserId() {
-  return '_' + Math.random().toString(36).substr(2, 9);
-}
-
 function sendMessage(message) {
   let msg = {
     user: name,
-    userId: userId,
     message: message.trim()
   };
-  // Append message to the DOM
+  // Append 
   appendMessage(msg, 'outgoing');
   textarea.value = '';
   scrollToBottom();
 
-  // Send to server
+  // Send to server 
   socket.emit('message', msg);
 }
 
@@ -40,18 +34,16 @@ function appendMessage(msg, type) {
   mainDiv.classList.add(className, 'message');
 
   let markup = `
-    <h4>${msg.user}</h4>
-    <p>${msg.message}</p>
+      <h4>${msg.user}</h4>
+      <p>${msg.message}</p>
   `;
   mainDiv.innerHTML = markup;
   messageArea.appendChild(mainDiv);
 }
 
-// Ensure this event listener is added only once
+// Recieve messages 
 socket.on('message', (msg) => {
-  if (msg.userId !== userId) {
-    appendMessage(msg, 'incoming');
-  }
+  appendMessage(msg, 'incoming');
   scrollToBottom();
 });
 
